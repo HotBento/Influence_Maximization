@@ -9,10 +9,12 @@ import math
 import heapq
 import ISE
 
-
 class Worker(mp.Process):
     def __init__(self, inQ, outQ):
         super(Worker, self).__init__(target=self.start)
+        self.node_num = node_num
+        self.model = model
+        self.graph = graph
         self.inQ = inQ
         self.outQ = outQ
         self.R = []
@@ -24,8 +26,9 @@ class Worker(mp.Process):
             theta = self.inQ.get()
             # print(theta)
             while self.count < theta:
-                v = random.randint(1, node_num)
-                rr = generate_rr(v)
+                # print(node_num)
+                v = random.randint(1, self.node_num)
+                rr = generate_rr(v, self.model, self.graph)
                 self.R.append(rr)
                 self.count += 1
             self.count = 0
@@ -119,12 +122,11 @@ def sampling(epsoid, l):
     return R
 
 
-def generate_rr(v):
-    global model
+def generate_rr(v, model, graph):
     if model == 'IC':
-        return generate_rr_ic(v)
+        return generate_rr_ic(v, graph)
     elif model == 'LT':
-        return generate_rr_lt(v)
+        return generate_rr_lt(v, graph)
 
 
 
@@ -193,7 +195,7 @@ def node_selection(R, k):
     return Sk, len(covered_set) / len(R)
 '''
 
-def generate_rr_ic(node):
+def generate_rr_ic(node, graph):
     activity_set = list()
     activity_set.append(node)
     activity_nodes = list()
@@ -210,7 +212,7 @@ def generate_rr_ic(node):
     return activity_nodes
 
 
-def generate_rr_lt(node):
+def generate_rr_lt(node, graph):
     # calculate reverse reachable set using LT model
     # activity_set = list()
     activity_nodes = list()
