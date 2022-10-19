@@ -1,13 +1,15 @@
-from invgraph import Graph
-from graph import pGraph
-import random
-import multiprocessing as mp
-import time
 import getopt
-import sys
-import math
 import heapq
+import math
+import multiprocessing as mp
+import random
+import sys
+import time
+
 import ISE
+from graph import pGraph
+from invgraph import Graph
+
 
 class Worker(mp.Process):
     def __init__(self, inQ, outQ):
